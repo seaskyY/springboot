@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d- %5p - Uptime: [ %r ms ] - Msg: %m - Thread: [ %t ]%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="sqllog"
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <File>logs/sql.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/sql.%d{yyyyMMdd}.log.gz</fileNamePattern>
+    </rollingPolicy>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d %p [%c] - %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>${logback.java.sql.level_dynamic}</level>
+    </filter>
+  </appender>
+
+  <appender name="errorlog"
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <File>logs/error.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/error.%d{yyyyMMdd}.log.gz
+      </fileNamePattern>
+    </rollingPolicy>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d - %5p - Uptime: [ %r ms ] - Msg: %m - Thread: [ %t ]%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>${logback.appender.errorfile.level_dynamic}</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <appender name="alllog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <File>logs/all.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/info.%d{yyyyMMdd}.log.gz
+      </fileNamePattern>
+    </rollingPolicy>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d - %5p - Uptime: [ %r ms ] - Msg: %m - Thread: [ %t ]%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="java.sql" level="${logback.java.sql.level_dynamic}">
+    <appender-ref ref="sqllog"/>
+  </logger>
+
+  <logger name="com.tc.session.zookeeper.ZookeeperSessionClient" additivity="false"/>
+  <logger name="com.tc.common.check.vmstatus.store.StompStatStore" level="ERROR"/>
+  <logger name="com.tc.session.redis" additivity="false"/>
+  <logger name="org.apache.zookeeper.ClientCnxn" additivity="false"/>
+
+  <root level="${logback.logger.root.level.level_dynamic}">
+    <appender-ref ref="console"/>
+    <appender-ref ref="errorlog"/>
+    <appender-ref ref="alllog"/>
+  </root>
+</configuration>

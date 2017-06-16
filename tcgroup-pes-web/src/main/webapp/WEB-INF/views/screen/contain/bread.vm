@@ -1,0 +1,6 @@
+#set($layout = '')
+#foreach($item in $navs)
+	#if($velocityCount>1)<cite>&gt;</cite>#end
+	#if(${item.url} == "#")	<span>$!{item.tabName}</span> #else	<span><a  #if($velocityCount==1) class="navigationOne" #end  href="${appServer}$!{item.url}">$!{item.tabName}</a></span>
+	#end
+#end

@@ -1,0 +1,30 @@
+#set($layout = '')
+<header>
+    <div class="head-top">
+    	<div class="f-l admin_logo">牙周检查系统</div>
+        <div class="f-r admin_id"><span><em>尊敬的：</em><em class="m-r10">$!userAgent.userName</em><em class="m-r10">您好！</em></span><span><a class="blue-link" id="logoutBtn" href="javascript:;" url="$appServer.get('/j_spring_cas_security_logout')">退出</a></span></div>
+        <div class="head-nav f-l" data-default="">
+			<div class="move-nav"><a href="javascript:;" class="nav-left" title="导航左移"></a><a href="javascript:;" class="nav-right" title="导航右移"></a></div>
+			#foreach($levOneMenu in ${oneLevelLs})
+            	<div class="pos-rel parentNav"><a href="${levOneMenu.rootUrl}${levOneMenu.menu.menuUrl}" class="nav1 #if(${levOneMenu.menu.menuName} == ${topMenuName}) now #end" >${levOneMenu.menu.menuName}</a>
+					<!--是否有二级菜单-->
+					#if($menus.get("${levOneMenu.menu.menuId}") !=$null && $menus.get("${levOneMenu.menu.menuId}").size()>0)
+                	<span class="pos-abs subNav hide">
+						#foreach($levTowMenu in $menus.get("${levOneMenu.menu.menuId}"))
+						<a href="${levTowMenu.rootUrl}${levTowMenu.menu.menuUrl}" class="">${levTowMenu.menu.menuName}</a>
+						#end
+					</span>
+					#end
+                </div>
+			#end
+        </div>
+    </div>    
+</header>
+<!--面包屑开始-->
+<div class="break-map p-lr10 w-min960">
+#foreach($item in $navs)
+	#if($velocityCount>1)<cite>&gt;</cite>#end
+	#if(${item.url} == "#")	<span>$!{item.tabName}</span> #else	<span><a  #if($velocityCount==1) #end  href="${appServer}$!{item.url}">$!{item.tabName}</a></span>
+	#end
+#end
+</div>

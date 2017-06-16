@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <classPathEntry location="target/dependency/postgresql-9.4.1212.jre7.jar" />
+
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+    <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+    <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+
+    <plugin type="com.tc.his.provider.dao.plugin.PostgrePaginationPlugin">
+        <property name="pageCriteriaPackage" value="com.tc.pes.api.model"/>
+    </plugin>
+
+    <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+      <property name="searchString" value="Example$" />
+      <property name="replaceString" value="Criteria" />
+    </plugin>
+
+
+      <plugin type="com.tc.his.provider.dao.plugin.PrimaryKeyProcessPlugin">
+          <property name="primaryKeyProcess" value="true"/>
+      </plugin>
+
+    <plugin type="com.tc.his.provider.dao.plugin.RenameJavaClientPlugin">
+      <property name="searchString" value="Mapper$" />
+      <property name="replaceString" value="Dao" />
+      <property name="targetProject" value="src/main/java"/>
+      <property name="targetPackage" value="com.tc.pes.provider.dao"/>
+      <property name="modelTargetPackage" value="com.tc.pes.api.model"/>
+      <property name="daoInterfacePackage" value="com.tc.pes.provider.dao"/>
+    </plugin>
+
+    <plugin type="com.tc.his.provider.dao.plugin.RenameXmlFilePlugin">
+      <property name="searchString" value="Mapper\.xml$" />
+      <property name="replaceString" value="Dao\.xml" />
+    </plugin>
+
+
+    <!-- 去除自动生成的注释 -->
+    <commentGenerator>
+      <property name="suppressAllComments" value="true" />
+      <property name="suppressDate" value="true" />
+    </commentGenerator>
+    <jdbcConnection driverClass="org.postgresql.Driver"
+      connectionURL="jdbc:postgresql://10.1.10.215:1233/his_new"
+      userId="postgres" password="pg123">
+    </jdbcConnection>
+
+    <javaTypeResolver>
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <!-- generate Model -->
+    <javaModelGenerator targetPackage="com.tc.pes.api.model"
+      targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+      <property name="constructorBased" value="true" />
+       <property name="rootClass" value="PojoWithPkSet" />
+    </javaModelGenerator>
+
+    <!-- generate xml -->
+    <sqlMapGenerator targetPackage="."
+      targetProject="src/main/resources/ibatis">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <!-- generate Mapper -->
+    <javaClientGenerator type="XMLMAPPER"
+      targetPackage="com.tc.pes.provider.dao" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+    <!-- =================================================================== -->
+    <!-- 请按照表名的字典顺序维护 -->
+    <!-- =================================================================== -->
+<!--
+    <table tableName="t_expert_schedule" domainObjectName="ExpertSchedule">
+      <property name="primaryKey" value="expert_schedule_id"  />
+    </table>
+
+    <table tableName="t_bill_receive" domainObjectName="BillReceive">
+      <property name="primaryKey" value="bill_receive_id"  />
+    </table>
+
+    <table tableName="t_bill_usage" domainObjectName="BillUsage">
+      <property name="primaryKey" value="bill_usage_id"  />
+    </table>
+
+    <table tableName="t_charge_archive_daily" domainObjectName="ChargeArchiveDaily">
+      <property name="primaryKey" value="charge_archive_daily_id"  />
+    </table>
+    <table tableName="t_charge_bill_archive_daily" domainObjectName="ChargeBillArchiveDaily">
+      <property name="primaryKey" value="charge_bill_archive_daily_id"  />
+    </table>
+
+    <table tableName="t_call_template" domainObjectName="CallTemplate">
+      <property name="primaryKey" value="call_template_id"  />
+    </table>
+
+    <table tableName="t_change_card_his" domainObjectName="ChangeCardHis">
+      <property name="primaryKey" value="change_id"  />
+    </table>
+
+    <table tableName="t_charge" domainObjectName="Charge">
+      <property name="primaryKey" value="charge_id" />
+    </table>
+
+    <table tableName="t_charge_child" domainObjectName="ChargeChild">
+      <property name="primaryKey" value="charge_child_id"  />
+    </table>
+
+    <table tableName="t_charge_bill" domainObjectName="ChargeBill">
+      <property name="primaryKey" value="charge_bill_id"  />
+    </table>
+
+    <table tableName="t_bill_usage_operation" domainObjectName="BillUsageOperation">
+      <property name="primaryKey" value="bill_usage_operation_id"  />
+    </table>
+
+    <table tableName="t_charge_item" domainObjectName="ChargeItem">
+      <property name="primaryKey" value="charge_item_id"  />
+    </table>
+
+    <table tableName="t_charge_template" domainObjectName="ChargeTemplate">
+      <property name="primaryKey" value="charge_template_id"  />
+    </table>
+
+    <table tableName="t_charge_template_child" domainObjectName="ChargeTemplateChild">
+      <property name="primaryKey" value="charge_template_child_id" />
+    </table>
+
+    <table tableName="t_charge_type" domainObjectName="ChargeType">
+      <property name="primaryKey" value="charge_type_id"  />
+    </table>
+
+    <table tableName="t_child_exchange" domainObjectName="ChildExchange">
+    <property name="primaryKey" value="child_exchange_id"  />
+    </table>
+
+    <table tableName="t_child_recipe" domainObjectName="ChildRecipe">
+      <property name="primaryKey" value="recipe_child_id"  />
+    </table>
+
+     <table tableName="t_child_treatment_plan" domainObjectName="ChildTreatmentPlan">
+      <property name="primaryKey" value="child_treatment_plan_id"  />
+    </table>
+
+    <table tableName="t_clinic_area" domainObjectName="ClinicArea">
+      <property name="primaryKey" value="ca_id"  />
+    </table>
+
+    <table tableName="t_diagnosis" domainObjectName="Diagnosis">
+      <property name="primaryKey" value="diagnosis_id"  />
+    </table>
+
+    <table tableName="t_dict" domainObjectName="Dict">
+      <property name="primaryKey" value="dict_id"  />
+    </table>
+
+    <table tableName="t_disease" domainObjectName="Disease">
+      <property name="primaryKey" value="disease_id"  />
+    </table>
+
+    <table tableName="t_doctor_introduce" domainObjectName="DoctorIntroduce">
+    <property name="primaryKey" value="doctor_introduce_id"  />
+    </table>
+
+    <table tableName="t_exchange" domainObjectName="Exchange">
+     <property name="primaryKey" value="exchange_id"  />
+    </table>
+
+    <table tableName="t_feedback" domainObjectName="Feedback">
+     <property name="primaryKey" value="feedback_id" />
+    </table>
+
+    <table tableName="t_file" domainObjectName="File">
+     <property name="primaryKey" value="file_id"  />
+    </table>
+
+     <table tableName="t_flow_num" domainObjectName="FlowNum">
+     <property name="primaryKey" value="flow_num_id"  />
+    </table>
+
+    <table tableName="t_user_expandability" domainObjectName="UserExpandability">
+      <property name="primaryKey" value="user_expandability_id" />
+    </table>
+
+    <table tableName="t_user_post" domainObjectName="UserPost">
+      <property name="primaryKey" value="user_post_id" />
+    </table>
+
+    <table tableName="t_medicinal_area" domainObjectName="MedicinalArea">
+      <property name="primaryKey" value="area_id" />
+    </table>
+
+    <table tableName="t_medicinal_unit" domainObjectName="MedicinalUnit">
+      <property name="primaryKey" value="unit_id"  />
+    </table>
+
+
+    <table tableName="t_mr_type" domainObjectName="MrType">
+      <property name="primaryKey" value="mr_type_id"  />
+    </table>
+
+    <table tableName="t_mr_template" domainObjectName="MrTemplate">
+      <property name="primaryKey" value="mr_template_id"  />
+    </table>
+
+    <table tableName="t_mr_template_detail" domainObjectName="MrTemplateDetail">
+      <property name="primaryKey" value="mr_template_detail_id"  />
+    </table>
+
+    <table tableName="t_mr_reception" domainObjectName="MrReception">
+      <property name="primaryKey" value="mr_reception_id"  />
+    </table>
+
+    <table tableName="t_msg_send_list" domainObjectName="MsgSendList">
+      <property name="primaryKey" value="msg_list_id" />
+    </table>
+
+    <table tableName="t_msg_template" domainObjectName="MsgTemplate">
+      <property name="primaryKey" value="msg_template_id" />
+    </table>
+
+    <table tableName="t_msg_unsend_list" domainObjectName="MsgUnsendList">
+      <property name="primaryKey" value="msg_list_id"  />
+    </table>
+
+    <table tableName="t_office_user" domainObjectName="OfficeUser">
+      <property name="primaryKey" value="ou_id"  />
+    </table>
+
+    <table tableName="t_office_ca" domainObjectName="OfficeCa">
+      <property name="primaryKey" value="oca_id"  />
+    </table>
+
+    <table tableName="t_onduty_doctor" domainObjectName="OndutyDoctor">
+      <property name="primaryKey" value="onduty_doctor_id"/>
+    </table>
+
+    <table tableName="t_outpatient_log" domainObjectName="OutpatientLog">
+      <property name="primaryKey" value="outpatient_log_id"  />
+    </table>
+
+    <table tableName="t_pacs_xray_info" domainObjectName="PacsXrayInfo">
+      <property name="primaryKey" value="xray_id"  />
+    </table>
+
+    <table tableName="t_pacs_acs_xray_list" domainObjectName="PacsAcsXrayList">
+      <property name="primaryKey" value="id"  />
+    </table>
+
+    <table tableName="t_pacs_system_set" domainObjectName="PacsSystemSet">
+      <property name="primaryKey" value="id" />
+    </table>
+
+    <table tableName="t_patient" domainObjectName="Patient">
+      <property name="primaryKey" value="patient_id"/>
+    </table>
+
+    <table tableName="t_patient_charge_statistic" domainObjectName="PatientChargeStatistic">
+      <property name="primaryKey" value="patient_charge_statistic_id"  />
+    </table>
+
+    <table tableName="t_patient_visit" domainObjectName="PatientVisit">
+      <property name="primaryKey" value="patient_visit_id" />
+    </table>
+
+    <table tableName="t_pay_type_compose" domainObjectName="PayTypeCompose">
+      <property name="primaryKey" value="pay_compose_id"  />
+    </table>
+
+    <table tableName="t_radiate" domainObjectName="Radiate">
+      <property name="primaryKey" value="radiate_id"  />
+    </table>
+
+    <table tableName="t_radiate_area" domainObjectName="RadiateArea">
+      <property name="primaryKey" value="radiate_area_id"  />
+    </table>
+
+    <table tableName="t_radiate_content" domainObjectName="RadiateContent">
+      <property name="primaryKey" value="RADIATE_CONTENT_ID"  />
+    </table>
+
+    <table tableName="t_radiate_queue" domainObjectName="RadiateQueue">
+      <property name="primaryKey" value="radiate_queue_id" />
+    </table>
+
+    <table tableName="t_radiate_register" domainObjectName="RadiateRegister">
+      <property name="primaryKey" value="radiate_register_id" />
+    </table>
+
+    <table tableName="t_radiatearea_queue" domainObjectName="RadiateareaQueue">
+      <property name="primaryKey" value="radiatearea_queue_id" />
+    </table>
+
+    <table tableName="t_radiatequeue_toothtype" domainObjectName="RadiatequeueToothtype">
+      <property name="primaryKey" value="queue_tooth_id" />
+    </table>
+
+    <table tableName="t_reception" domainObjectName="Reception">
+      <property name="primaryKey" value="reception_id"  />
+    </table>
+
+    <table tableName="t_recipe" domainObjectName="Recipe">
+      <property name="primaryKey" value="recipe_id"  />
+    </table>
+
+    <table tableName="t_register" domainObjectName="Register">
+      <property name="primaryKey" value="register_id" />
+    </table>
+
+    <table tableName="t_register_type" domainObjectName="RegisterType">
+      <property name="primaryKey" value="register_type_id" />
+    </table>
+
+    <table tableName="t_system_para" domainObjectName="SystemPara">
+      <property name="primaryKey" value="para_id"  />
+    </table>
+
+    <table tableName="t_tooth_charge_item" domainObjectName="ToothChargeItem">
+      <property name="primaryKey" value="tooth_charge_id" />
+    </table>
+
+    <table tableName="t_tooth_type" domainObjectName="ToothType">
+      <property name="primaryKey" value="tooth_type_id" />
+    </table>
+
+    <table tableName="t_treatment" domainObjectName="Treatment">
+      <property name="primaryKey" value="treatment_id"  />
+    </table>
+
+    <table tableName="t_treatment_plan" domainObjectName="TreatmentPlan">
+      <property name="primaryKey" value="treatment_plan_id"  />
+    </table>
+
+    <table tableName="t_invoice_info" domainObjectName="InvoiceInfo">
+      <property name="primaryKey" value="invoice_info_id"  />
+    </table>
+    <table tableName="t_lock" domainObjectName="Lock">
+      <property name="primaryKey" value="lock_id" />
+    </table>
+
+    <table tableName="t_plan_schedule" domainObjectName="PlanSchedule">
+      <property name="primaryKey" value="plan_schedule_id" />
+    </table>
+
+    <table tableName="t_schedules" domainObjectName="Schedules">
+      <property name="primaryKey" value="schedule_id"  />
+    </table>
+
+    <table tableName="t_mark" domainObjectName="Mark">
+      <property name="primaryKey" value="mark_id"  />
+    </table>
+
+    <table tableName="t_office_schedule" domainObjectName="OfficeSchedule">
+      <property name="primaryKey" value="office_schedule_id" />
+    </table>
+
+    <table tableName="t_debt" domainObjectName="Debt">
+      <property name="primaryKey" value="debt_id"  />
+    </table>
+    <table tableName="t_child_debt" domainObjectName="ChildDebt">
+      <property name="primaryKey" value="child_debt_id"  />
+    </table>
+    <table tableName="t_debt_log" domainObjectName="DebtLog">
+      <property name="primaryKey" value="debt_log_id"/>
+    </table>
+
+    <table tableName="t_park_base" domainObjectName="ParkBase">
+      <property name="primaryKey" value="park_base_id"  />
+    </table>
+
+    <table tableName="t_park_time" domainObjectName="ParkTime">
+      <property name="primaryKey" value="park_time_id" />
+    </table>
+
+    <table tableName="t_park_reprint_reason" domainObjectName="ParkReprintReason">
+      <property name="primaryKey" value="park_reprint_reason_id"  />
+    </table>
+
+    <table tableName="t_park_print_log" domainObjectName="ParkPrintLog">
+      <property name="primaryKey" value="park_print_log_id"  />
+    </table>
+
+    <table tableName="t_ort_archive" domainObjectName="OrtArchive">
+      <property name="primaryKey" value="ort_archive_id"  />
+    </table>
+
+    <table tableName="t_ort_archive_pic" domainObjectName="OrtArchivePic">
+      <property name="primaryKey" value="ort_archive_pic_id"  />
+    </table>
+
+    <table tableName="t_ort_archive_reception" domainObjectName="OrtArchiveReception">
+      <property name="primaryKey" value="ort_archive_reception_id" />
+    </table>
+
+    <table tableName="t_ort_diagnosis_before" domainObjectName="OrtDiagnosisBefore">
+      <property name="primaryKey" value="ort_diagnosis_before_id"  />
+    </table>
+
+    <table tableName="t_ort_inspection_report" domainObjectName="OrtInspectionReport">
+      <property name="primaryKey" value="ort_inspection_report_id"  />
+    </table>
+
+    <table tableName="t_ort_treatment_plan" domainObjectName="OrtTreatmentPlan">
+      <property name="primaryKey" value="ort_treatment_plan_id"  />
+    </table>
+
+    <table tableName="t_ort_treatment_record" domainObjectName="OrtTreatmentRecord">
+      <property name="primaryKey" value="ort_treatment_record_id" />
+    </table>
+
+    <table tableName="t_ort_item_material" domainObjectName="OrtItemMaterial">
+      <property name="primaryKey" value="ort_item_material_id"  />
+    </table>
+
+    <table tableName="t_register_backup" domainObjectName="RegisterBackup">
+      <property name="primaryKey" value="register_backup_id" />
+    </table>
+
+    <table tableName="t_register_queue" domainObjectName="RegisterQueue">
+      <property name="primaryKey" value="register_queue_id" />
+    </table>
+
+    <table tableName="t_doctor_chair" domainObjectName="DoctorChair">
+      <property name="primaryKey" value="doctor_chair_id"  />
+    </table>
+
+    <table tableName="t_outpatient_log_diagnosis" domainObjectName="OutpatientLogDiagnosis">
+      <property name="primaryKey" value="odi"  />
+    </table>
+
+    <table tableName="t_picture_package" domainObjectName="PicturePackage">
+      <property name="primaryKey" value="pic_pak_id"  />
+    </table>
+    <table tableName="t_picture" domainObjectName="Picture">
+      <property name="primaryKey" value="pic_id" />
+    </table>
+    <table tableName="t_dhc_para" domainObjectName="DhcPara">
+      <property name="primaryKey" value="dhc_para_id" />
+    </table>
+     <table tableName="t_user_charge_archive_month" domainObjectName="UserChargeArchiveMonth">
+          <property name="primaryKey" value="user_charge_archive_month_id" />
+     </table>
+     <table tableName="t_user_profile" domainObjectName="UserProfile">
+          <property name="primaryKey" value="user_profile_id" />
+     </table>
+
+      <table tableName="t_charge_type_archive_daily" domainObjectName="ChargeTypeArchiveDaily">
+          <property name="primaryKey" value="charge_type_archive_daily_id"/>
+      </table>
+
+      <table tableName="t_charge_template_type" domainObjectName="ChargeTemplateType">
+          <property name="primaryKey" value="charge_template_type_id"/>
+      </table>
+
+      <table tableName="t_patient_appointment" domainObjectName="PatientAppointment">
+          <property name="primaryKey" value="patient_appointment_id" />
+      </table>
+
+      <table tableName="t_billlimit_pro" domainObjectName="BilllimitPro">
+          <property name="primaryKey" value="billlimit_pro_id"  />
+      </table>
+
+      <table tableName="t_reception_patient_mark" domainObjectName="ReceptionPatientMark">
+          <property name="primaryKey" value="reception_patient_mark_id"  />
+      </table>
+
+      <table tableName="t_pay_type" domainObjectName="PayType">
+          <property name="primaryKey" value="pay_type_id"/>
+      </table>
+
+      <table tableName="t_charge_item_log" domainObjectName="ChargeItemLog">
+          <property name="primaryKey" value="charge_item_log_id" />
+      </table>
+
+      <table tableName="t_cast_history_rate_statistic" domainObjectName="CastHistoryRateStatistic">
+          <property name="primaryKey" value="id"  />
+      </table>
+
+      <table tableName="t_radiate_report" domainObjectName="RadiateReport">
+          <property name="primaryKey" value="radiate_report_id"/>
+      </table>
+
+      <table tableName="t_child_recipe_group" domainObjectName="ChildRecipeGroup">
+          <property name="primaryKey" value="child_recipe_group_id" />
+      </table>
+
+	 <table tableName="t_report_template" domainObjectName="ReportTemplate">
+         <property name="primaryKey" value="report_template_id"  />
+     </table>
+
+     <table tableName="t_patient_referral" domainObjectName="PatientReferral">
+         <property name="primaryKey" value="id"  />
+     </table>
+
+     <table tableName="t_patient_referral_statistic" domainObjectName="PatientReferralStatistic">
+         <property name="primaryKey" value="id"  />
+     </table>
+
+     <table tableName="t_patient_udc" domainObjectName="PatientUdc">
+         <property name="primaryKey" value="id"  />
+     </table>
+
+      <table tableName="t_parameter" domainObjectName="Parameter">
+          <property name="primaryKey" value="parameter_id"  />
+      </table>
+
+      <table tableName="t_register_item_office" domainObjectName="RegisterItemOffice">
+         <property name="primaryKey" value="register_item_office_id"  />
+     </table>
+     <table tableName="t_holiday" domainObjectName="Holiday">
+         <property name="primaryKey" value="holiday_id"  />
+     </table>
+     <table tableName="t_charge_item_strategy" domainObjectName="ChargeItemStrategy">
+         <property name="primaryKey" value="charge_item_strategy_id"  />
+     </table>
+
+     <table tableName="t_appointment_content" domainObjectName="AppointmentContent">
+       <property name="primaryKey" value="appointment_content_id"  />
+     </table>
+
+     <table tableName="t_charge_child_archive_daily" domainObjectName="ChargeChildArchiveDaily">
+       <property name="primaryKey" value="charge_child_id"  />
+     </table>
+     <table tableName="t_member_charge_print" domainObjectName="MemberChargePrint">
+      <property name="primaryKey" value="member_charge_print_id" />
+     </table>
+
+    <table tableName="t_member_consume_archive_daily" domainObjectName="MemberConsumeArchiveDaily">
+      <property name="primaryKey" value="member_consume_archive_daily_id" />
+    </table>
+
+    <table tableName="t_reception_evaluate" domainObjectName="ReceptionEvaluate">
+      <property name="primaryKey" value="reception_evaluate_id" />
+    </table>
+
+    <table tableName="t_reception_evaluate_child" domainObjectName="ReceptionEvaluateChild">
+      <property name="primaryKey" value="reception_evaluate_child_id" />
+    </table>
+    -->
+    <table tableName="t_reception_evaluate" domainObjectName="ReceptionEvaluate">
+      <property name="primaryKey" value="reception_evaluate_id" />
+    </table>
+    <table tableName="t_reception_evaluate_child" domainObjectName="ReceptionEvaluateChild">
+      <property name="primaryKey" value="reception_evaluate_child_id" />
+    </table>
+  </context>
+</generatorConfiguration>

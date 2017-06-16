@@ -1,0 +1,6 @@
+一般都不需要后台的controller的业务逻辑支持(即没有对应的action代码)的vm 都放在该目录;
+另一部分是，一些共用的vm（当然，有对应的action）.
+
+htmlhead.vm http 页面的<head/>标签的内容
+navbar.vm   http 页面的顶部导航的内容, 有对应的action
+pageslide.vm http 页面的分页内容，有对应的action

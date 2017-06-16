@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+       ">
+
+    <!--consumer-->
+    <dubbo:application name="${spring.dubbo.application.name}"/>
+    <dubbo:registry address="${spring.dubbo.registry.address}" timeout="${spring.dubbo.registry.timeout}"
+                    check="${spring.dubbo.registry.check}"/>
+    <dubbo:consumer id="pes_web_consumer" check="${spring.dubbo.consumer.check}"/>
+
+	<!-- PES接口 -->
+  <!--  <dubbo:reference id="baseGroupHospitalRefService" interface="com.tc.pes.service.IBaseGroupHospitalRefService"
+                     group="${spring.dubbo.scm3.group}" version="${spring.dubbo.scm3.version}"/>-->
+
+</beans>

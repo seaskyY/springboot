@@ -1,0 +1,7 @@
+#set($layout = '')
+<!--新增弹出框结束-->
+<!-- <script src="js/seajs/base.js?v=2.0" id="seajsFile"></script> -->
+<script src="$resourceServer.get('js/seajs/sea.js?v=2.0')" 
+		data-config="$resourceServer.get('js/config.js?v=2.0')"
+        data-refresh-token="$appServer.get('/common/refresh-resubmit-token.htm')"
+        data-main="$resourceServer.get('js/main.js?v=2.0')" id="seajsFile"></script>

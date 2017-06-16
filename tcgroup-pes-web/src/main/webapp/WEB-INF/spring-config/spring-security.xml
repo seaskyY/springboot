@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security-3.1.xsd
+       ">
+
+  <bean id="servicePropertiesCas" class="org.springframework.security.cas.ServiceProperties">
+    <!-- 发送给CAS服务器的回调URL-->
+    <property name="service" value="${spring.app.web.url.service}"/>
+    <!--是否告知CAS服务器：本应用是敏感业务，不允许使用其他应用产生的登录状态，必须要求用户重新输入密码-->
+    <property name="sendRenew" value="false"/>
+    <!--  对所有的URL均进行认证检查-->
+    <property name="authenticateAllArtifacts" value="true"/>
+  </bean>
+  <bean id="casEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+    <property name="loginUrl" value="${spring.cas.url.login}"/>
+    <property name="serviceProperties" ref="servicePropertiesCas"/>
+  </bean>
+
+  <bean id="pgtStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl"/>
+
+  <bean id="cas20ProxyTicketValidator" class="com.tc.common.security.TcCas20ProxyTicketValidator">
+    <constructor-arg value="${spring.cas.url}"/>
+    <property name="proxyCallbackUrl" value="${spring.app.web.url.proxyreceptor}"/>
+    <property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
+    <property name="acceptAnyProxy" value="true"/>
+    <property name="encoding" value="utf-8"/>
+    <!--指定ticket解析编码方式，否则使用默认操作系统编码-->
+  </bean>
+
+  <!--该Filter处理来自CAS服务器的单点退出请求-->
+  <!--<bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter">
+    <property name="sessionMappingStorage">
+      <bean class="com.tc.common.security.DistributeRedisBackedSessionMappingStorage">
+        <property name="redisTemplate" ref="sessionRedisTemplate"/>
+      </bean>
+    </property>
+  </bean>-->
+  <!-- 默认监视 /j_spring_cas_security_check-->
+  <bean id="casFilter" class="com.tc.common.security.CookieCasAuthenticationFilter">
+    <property name="authenticationManager" ref="authenticationManagerCas"/>
+    <property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
+    <property name="serviceProperties" ref="servicePropertiesCas"/>
+    <property name="proxyReceptorUrl" value="/j_spring_cas_security_proxyreceptor"/>
+    <!--<property name="authenticationDetailsSource">
+      <bean class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource"/>
+    </property>-->
+  </bean>
+
+  <!--该Filter会将用户重定向到CAS服务器，并通知CAS服务器进行单点退出操作-->
+  <bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+    <constructor-arg value="${spring.cas.url.logout}" type="java.lang.String" index="0"/>
+    <constructor-arg index="1" type="org.springframework.security.web.authentication.logout.LogoutHandler[]">
+      <list value-type="org.springframework.security.web.authentication.logout.LogoutHandler">
+        <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+      </list>
+    </constructor-arg>
+    <property name="filterProcessesUrl" value="/j_spring_cas_security_logout"/>
+  </bean>
+
+  <bean id="authenticationProviderCas"
+        class="com.tc.common.security.TcCasAuthenticationProvider">
+    <!--<property name="authenticationUserDetailsService">
+      <bean class="com.tc.common.security.UserDetailsByNameServiceWrapperWithHospitalId">
+        <constructor-arg ref="userDetailsService"/>
+      </bean>
+    </property>-->
+    <property name="serviceProperties" ref="servicePropertiesCas"/>
+    <property name="ticketValidator" ref="cas20ProxyTicketValidator"/>
+    <property name="key" value="ddfewerfddx"/>
+  </bean>
+
+  <security:http realm="tc_pes_2.6.8"
+                 use-expressions="true"
+                 disable-url-rewriting="true"
+                 entry-point-ref="casEntryPoint">
+    <security:logout logout-success-url="/" delete-cookies="JSESSIONID" invalidate-session="true"/>
+    <security:custom-filter before="LOGOUT_FILTER" ref="requestSingleLogoutFilter"/>
+    <security:custom-filter before="CAS_FILTER" ref="singleLogoutFilter"/>
+    <security:custom-filter position="CAS_FILTER" ref="casFilter"/>
+  </security:http>
+
+  <security:authentication-manager alias="authenticationManagerCas">
+    <security:authentication-provider ref="authenticationProviderCas"/>
+  </security:authentication-manager>
+
+</beans>

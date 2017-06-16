@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %p [%c] - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.tc.session.zookeeper.ZookeeperSessionClient" level="ERROR"/>
+    <logger name="com.tc.common.check.vmstatus.store.StompStatStore" level="ERROR"/>
+    <logger name="com.tc.session.redis" level="ERROR" />
+    <logger name="com.tc.session" level="WARN"/>
+
+    <root level="${logback.logger.root.level.level_dynamic}">
+        <appender-ref ref="console"/>
+    </root>
+</configuration>

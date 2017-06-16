@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <context:component-scan base-package="com.tc.pes.service.impl"/>
+    <!-- 支持异步方法执行 -->
+    <task:annotation-driven />
+    <!-- dataSource-->
+    <bean id="w_dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+          p:driverClassName="${spring.pes.jdbc.driverClassName}"
+          p:url="${spring.pes.jdbc.url}"
+          p:username="${spring.pes.jdbc.username}"
+          p:password="${spring.pes.jdbc.password}"
+          p:validationQuery="select 1 "
+          p:maxWait="50000"
+            />
+
+    <bean id="w_sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="mapperLocations">
+            <list>
+                <!--<value>classpath:mybatis/*.xml</value>-->
+                <!--<value>classpath:mybatis/ex/*.xml</value>-->
+            </list>
+        </property>
+        <property name="dataSource" ref="w_dataSource"/>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+          p:basePackage="com.tc.pes.dao"
+          p:markerInterface="com.tc.pes.dao.MyBatisRepository"
+          p:sqlSessionFactoryBeanName="w_sqlSessionFactoryBean"
+          p:processPropertyPlaceHolders="false"
+            />
+
+    <!-- transAction -->
+    <bean id="w_transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="w_dataSource"/>
+
+    <tx:advice id="w_txAdvice" transaction-manager="w_transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="create*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="modify*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="upload*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="alter*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="distribute*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="revoke*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="reset*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="audit*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="refer*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="sync*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="commit*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="invalid*" propagation="REQUIRED" rollback-for="Throwable"/>
+            <tx:method name="*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="w_allManagerMethod" expression="execution(* com.tc.pes.service.impl..*.*(..))"/>
+        <aop:advisor advice-ref="w_txAdvice" pointcut-ref="w_allManagerMethod"/>
+    </aop:config>
+
+    <!--开发测试阶段解决logback不输出java.sql.ResultSet问题
+    <bean id="w_daoInterceptor" class="com.tc.pes.core.interceptor.DaoInterceptor"/>
+    <aop:config>
+        <aop:pointcut id="w_daoLayer" expression="execution(* com.tc.pes.dao..*.*(..))"/>
+        <aop:advisor pointcut-ref="w_daoLayer" advice-ref="w_daoInterceptor"/>
+    </aop:config>
+    -->
+    <!--  单独启动时放开配置
+    <import resource="classpath*:core-service-context.xml"/>
+    <import resource="classpath*:dubbo-reference.xml" />-->
+</beans>

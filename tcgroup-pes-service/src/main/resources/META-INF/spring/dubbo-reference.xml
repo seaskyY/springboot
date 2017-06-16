@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+       ">
+
+    <import resource="classpath*:service-context.xml"/>
+
+    <!--consumer-->
+    <dubbo:application name="${spring.dubbo.application.name}"/>
+    <dubbo:registry address="${spring.dubbo.registry.address}" timeout="${spring.dubbo.registry.timeout}"
+                    check="${spring.dubbo.registry.check}"/>
+    <dubbo:consumer id="pes_service_consumer" check="${spring.dubbo.consumer.check}"/>
+
+    <!-- ================引用udc-3a服务================ -->
+    <dubbo:reference id="hospitalInfoService" interface="com.tc.udc.aaa.api.service.IHospitalInfoService"
+                     group="${spring.dubbo.udc.group}" version="${spring.dubbo.udc.version}"/>
+    <dubbo:reference id="sequenceService" interface="com.tc.udc.aaa.api.service.ISequenceService"
+                     group="${spring.dubbo.udc.group}" version="${spring.dubbo.udc.version}"/>
+
+    <!-- ===============引用pom的服务=================== -->
+    <dubbo:reference id="productDpiService" interface="com.tcmc.udc.pom.api.serivce.IProductDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+    <dubbo:reference id="dpScopeDpiService" interface="com.tcmc.udc.pom.api.serivce.IDPScopeDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+
+</beans>

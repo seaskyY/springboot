@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tc.pes.provider.dao.ReceptionEvaluateDao">
+  <resultMap id="BaseResultMap" type="com.tc.pes.api.model.ReceptionEvaluate">
+    <constructor>
+      <idArg column="reception_evaluate_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="evaluate_remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="reception_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="patient_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="patient_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="doctor_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="doctor_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="office_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="office_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="hospital_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="parent_hospital_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Criteria_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Criteria_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    reception_evaluate_id, evaluate_remark, reception_id, patient_id, patient_name, doctor_id, 
+    doctor_name, office_id, office_name, hospital_id, parent_hospital_id, create_time
+  </sql>
+  <select id="selectByCriteria" parameterType="com.tc.pes.api.model.ReceptionEvaluateCriteria" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_reception_evaluate
+    <if test="_parameter != null">
+      <include refid="Criteria_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="PostgreDialectPage" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_reception_evaluate
+    where reception_evaluate_id = #{receptionEvaluateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from t_reception_evaluate
+    where reception_evaluate_id = #{receptionEvaluateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByCriteria" parameterType="com.tc.pes.api.model.ReceptionEvaluateCriteria">
+    delete from t_reception_evaluate
+    <if test="_parameter != null">
+      <include refid="Criteria_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.tc.pes.api.model.ReceptionEvaluate">
+    insert into t_reception_evaluate (reception_evaluate_id, evaluate_remark, 
+      reception_id, patient_id, patient_name, 
+      doctor_id, doctor_name, office_id, 
+      office_name, hospital_id, parent_hospital_id, 
+      create_time)
+    values (#{receptionEvaluateId,jdbcType=BIGINT}, #{evaluateRemark,jdbcType=VARCHAR}, 
+      #{receptionId,jdbcType=BIGINT}, #{patientId,jdbcType=BIGINT}, #{patientName,jdbcType=VARCHAR}, 
+      #{doctorId,jdbcType=BIGINT}, #{doctorName,jdbcType=VARCHAR}, #{officeId,jdbcType=BIGINT}, 
+      #{officeName,jdbcType=VARCHAR}, #{hospitalId,jdbcType=BIGINT}, #{parentHospitalId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tc.pes.api.model.ReceptionEvaluate">
+    insert into t_reception_evaluate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="receptionEvaluateId != null">
+        reception_evaluate_id,
+      </if>
+      <if test="evaluateRemark != null">
+        evaluate_remark,
+      </if>
+      <if test="receptionId != null">
+        reception_id,
+      </if>
+      <if test="patientId != null">
+        patient_id,
+      </if>
+      <if test="patientName != null">
+        patient_name,
+      </if>
+      <if test="doctorId != null">
+        doctor_id,
+      </if>
+      <if test="doctorName != null">
+        doctor_name,
+      </if>
+      <if test="officeId != null">
+        office_id,
+      </if>
+      <if test="officeName != null">
+        office_name,
+      </if>
+      <if test="hospitalId != null">
+        hospital_id,
+      </if>
+      <if test="parentHospitalId != null">
+        parent_hospital_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="receptionEvaluateId != null">
+        #{receptionEvaluateId,jdbcType=BIGINT},
+      </if>
+      <if test="evaluateRemark != null">
+        #{evaluateRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="receptionId != null">
+        #{receptionId,jdbcType=BIGINT},
+      </if>
+      <if test="patientId != null">
+        #{patientId,jdbcType=BIGINT},
+      </if>
+      <if test="patientName != null">
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorId != null">
+        #{doctorId,jdbcType=BIGINT},
+      </if>
+      <if test="doctorName != null">
+        #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="officeId != null">
+        #{officeId,jdbcType=BIGINT},
+      </if>
+      <if test="officeName != null">
+        #{officeName,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null">
+        #{hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="parentHospitalId != null">
+        #{parentHospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCriteria" parameterType="com.tc.pes.api.model.ReceptionEvaluateCriteria" resultType="java.lang.Long">
+    select count(*) from t_reception_evaluate
+    <if test="_parameter != null">
+      <include refid="Criteria_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByCriteriaSelective" parameterType="map">
+    update t_reception_evaluate
+    <set>
+      <if test="record.receptionEvaluateId != null">
+        reception_evaluate_id = #{record.receptionEvaluateId,jdbcType=BIGINT},
+      </if>
+      <if test="record.evaluateRemark != null">
+        evaluate_remark = #{record.evaluateRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receptionId != null">
+        reception_id = #{record.receptionId,jdbcType=BIGINT},
+      </if>
+      <if test="record.patientId != null">
+        patient_id = #{record.patientId,jdbcType=BIGINT},
+      </if>
+      <if test="record.patientName != null">
+        patient_name = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.doctorId != null">
+        doctor_id = #{record.doctorId,jdbcType=BIGINT},
+      </if>
+      <if test="record.doctorName != null">
+        doctor_name = #{record.doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.officeId != null">
+        office_id = #{record.officeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.officeName != null">
+        office_name = #{record.officeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hospitalId != null">
+        hospital_id = #{record.hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.parentHospitalId != null">
+        parent_hospital_id = #{record.parentHospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Criteria_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCriteria" parameterType="map">
+    update t_reception_evaluate
+    set reception_evaluate_id = #{record.receptionEvaluateId,jdbcType=BIGINT},
+      evaluate_remark = #{record.evaluateRemark,jdbcType=VARCHAR},
+      reception_id = #{record.receptionId,jdbcType=BIGINT},
+      patient_id = #{record.patientId,jdbcType=BIGINT},
+      patient_name = #{record.patientName,jdbcType=VARCHAR},
+      doctor_id = #{record.doctorId,jdbcType=BIGINT},
+      doctor_name = #{record.doctorName,jdbcType=VARCHAR},
+      office_id = #{record.officeId,jdbcType=BIGINT},
+      office_name = #{record.officeName,jdbcType=VARCHAR},
+      hospital_id = #{record.hospitalId,jdbcType=BIGINT},
+      parent_hospital_id = #{record.parentHospitalId,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Criteria_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.tc.pes.api.model.ReceptionEvaluate">
+    update t_reception_evaluate
+    <set>
+      <if test="evaluateRemark != null">
+        evaluate_remark = #{evaluateRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="receptionId != null">
+        reception_id = #{receptionId,jdbcType=BIGINT},
+      </if>
+      <if test="patientId != null">
+        patient_id = #{patientId,jdbcType=BIGINT},
+      </if>
+      <if test="patientName != null">
+        patient_name = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorId != null">
+        doctor_id = #{doctorId,jdbcType=BIGINT},
+      </if>
+      <if test="doctorName != null">
+        doctor_name = #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="officeId != null">
+        office_id = #{officeId,jdbcType=BIGINT},
+      </if>
+      <if test="officeName != null">
+        office_name = #{officeName,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null">
+        hospital_id = #{hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="parentHospitalId != null">
+        parent_hospital_id = #{parentHospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where reception_evaluate_id = #{receptionEvaluateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateById" parameterType="com.tc.pes.api.model.ReceptionEvaluate">
+    update t_reception_evaluate
+    set evaluate_remark = #{evaluateRemark,jdbcType=VARCHAR},
+      reception_id = #{receptionId,jdbcType=BIGINT},
+      patient_id = #{patientId,jdbcType=BIGINT},
+      patient_name = #{patientName,jdbcType=VARCHAR},
+      doctor_id = #{doctorId,jdbcType=BIGINT},
+      doctor_name = #{doctorName,jdbcType=VARCHAR},
+      office_id = #{officeId,jdbcType=BIGINT},
+      office_name = #{officeName,jdbcType=VARCHAR},
+      hospital_id = #{hospitalId,jdbcType=BIGINT},
+      parent_hospital_id = #{parentHospitalId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where reception_evaluate_id = #{receptionEvaluateId,jdbcType=BIGINT}
+  </update>
+  <sql id="PostgreDialectPage">
+    <if test="page != null and page.begin != null and page.begin gte 0">
+      offset #{page.begin}
+    </if>
+    <if test="page != null and page.pageSize != null and page.pageSize gte 0">
+      limit #{page.pageSize}
+    </if>
+  </sql>
+</mapper>

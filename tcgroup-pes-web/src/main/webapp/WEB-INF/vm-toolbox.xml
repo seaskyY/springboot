@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<toolbox>
+	<xhtml>true</xhtml>
+	<tool>
+		<key>stringUtils</key>
+		<scope>application</scope>
+		<class>org.apache.commons.lang3.StringUtils</class>
+	</tool>
+	<tool>
+		<key>iDemand</key>
+		<scope>request</scope>
+		<class>com.tc.common.velocity.IDemand</class>
+	</tool>
+	<tool>
+		<key>esc</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.EscapeTool</class>
+	</tool>
+	<tool>
+		<key>contain</key>
+		<scope>request</scope>
+		<class>com.tc.common.velocity.tools.Contain</class>
+	</tool>
+	<tool>
+		<key>date</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.DateTool</class>
+	</tool>
+	<tool>
+		<key>dateUtils</key>
+		<scope>application</scope>
+		<class>com.tc.pes.core.PesDateUtils</class>
+	</tool>
+	<tool>
+		<key>string</key>
+		<scope>application</scope>
+		<class>java.lang.String</class>
+	</tool>
+	<tool>
+	    <key>number</key>
+	    <scope>application</scope>
+	    <class>org.apache.velocity.tools.generic.NumberTool</class>
+	    <parameter name="format" value="#0.00"/>
+	</tool>
+	<tool>
+		<key>authorityUtils</key>
+		<scope>application</scope>
+		<class>com.tcmc.scm.web.b.authority.AuthorityUtils</class>
+	</tool>
+     <tool>
+      <key>authorityConstant</key>
+      <scope>application</scope>
+      <class>com.tcmc.scm.web.b.authority.AuthorityConstant</class>
+    </tool>
+    <tool>
+      <key>simpleUtils</key>
+      <scope>application</scope>
+      <class>com.tc.pes.core.PesSimpleUtils</class>
+    </tool>
+    <tool>
+	  <key>math</key>
+	  <scope>application</scope>
+	  <class>org.apache.velocity.tools.generic.MathTool</class>
+	</tool>
+</toolbox>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	  <bean id="config"
+	        class="com.tc.trinity.core.config.StandalonePropertyPlaceholderConfigurer">
+	    <property name="locations">
+	      <list>
+	        <value>classpath:/config.properties</value>
+	      </list>
+	    </property>
+	  </bean>
+
+       <!-- 提供方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+       <dubbo:application name="${spring.dubbo.application.name}" owner="${spring.dubbo.application.owner}"/>
+
+       <!-- 使用zookeeper暴露发现服务地址 -->
+       <dubbo:registry address="${spring.dubbo.registry.address}" timeout="${spring.dubbo.registry.timeout}"
+                       check="${spring.dubbo.registry.check}"
+                file="${spring.dubbo.registry.file.path}/dubbo_registry_his_dubbo.cache"/>
+       <dubbo:protocol name="${spring.dubbo.protocol.name}" port="${spring.dubbo.protocol.port}"/>
+       <dubbo:provider version="${spring.dubbo.provider.version}" group="${spring.dubbo.provider.group}"
+                       loadbalance="${spring.dubbo.provider.loadbalance}" retries="${spring.dubbo.provider.retries}"
+                       timeout="${spring.dubbo.provider.timeout}"/>
+                       <!--filter="setHospitalId"/>-->
+
+       <!-- <dubbo:monitor protocol="${spring.dubbo.monitor.protocol}"/> -->
+       <dubbo:consumer check="${spring.dubbo.consumer.check}" />
+       <!--<dubbo:consumer check="${spring.dubbo.consumer.check}" filter="addHospitalIdDubbo2DubboId,default" />-->
+
+</beans>

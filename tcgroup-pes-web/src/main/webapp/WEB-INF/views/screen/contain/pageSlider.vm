@@ -1,0 +1,60 @@
+#set($layout = '')
+#set($forwardPage = $sliderCurrent - 1)
+#set($nextPage = $sliderCurrent + 1)
+
+#if($slider_broker)
+	#set($s_broker = $slider_broker)
+#else
+	#set($s_broker = $appServer)
+#end
+#if(${totalItem} != 0)
+<form name="pageSearch" id="pageSearch" method="post" action="$appServer.get(${baseUrl})">
+    <input type="hidden" id="totalPage" value="${sliderTotal}">
+    <div class="page text-c h-auto">
+        #*<span>每页
+            <select class="input-brd" id="pageSize" name="pageSize">
+                <option value="10" #if(${slider_query.pageSize} == 10)selected="selected"#end>10</option>
+                <option value="20" #if(${slider_query.pageSize} == 20)selected="selected"#end>20</option>
+                <option value="50" #if(${slider_query.pageSize} == 50)selected="selected"#end>50</option>
+            </select>条</span>*#
+		#if($sliderPrev > 0)
+            #*<span><a href="javascript:;" class="purple-button toPage" data-page="1">首页</a></span>*#
+            <span><a href="javascript:;" class="change-page toPage" data-page="$forwardPage">上一页</a></span>
+		#else
+            #*<span class="disabled">首页</span>*#
+            <span class="disabled">上一页</span>
+		#end
+		#if($sliderCurrent == 1)
+            <span class="now toPage" data-page="1">1</span>
+		#else
+            <span><a href="javascript:;" class="toPage" data-page="1">1</a></span>
+		#end
+		#foreach($grid in $grids)
+			#if($grid == 0)
+                <span class="mdn">...</span>
+			#elseif($grid == $sliderCurrent)
+                <span class="now toPage" data-page="$grid">$grid</span>
+			#else
+                <span><a href="javascript:;" class="toPage" data-page="$grid">$grid</a></span>
+			#end
+		#end
+		#if($sliderTotal != 1)
+			#if($sliderCurrent == $sliderTotal)
+                <span class="now toPage" data-page="$!{sliderTotal}">$!{sliderTotal}</span>
+			#else
+                <span><a href="javascript:;" class="toPage" data-page="$!{sliderTotal}">$!{sliderTotal}</a></span>
+			#end
+		#end
+		#if($sliderTotal != $sliderCurrent)
+            <span><a href="javascript:;" class="change-page toPage" data-page="$nextPage">下一页</a></span>
+            #*<span><a href="javascript:;" class="purple-button toPage" data-page="${sliderTotal}">末页</a></span>*#
+		#else
+            <span class="disabled">下一页</span>
+            #*<span class="disabled">末页</span>*#
+		#end
+            <input  id="pageNo" name="pageIndex" type="hidden" class="pageInput" value="$!{sliderCurrent}">
+        #*<span>跳到<input  id="pageNo" name="pageIndex" type="text" class="pageInput" value="$!{sliderCurrent}">页</span>
+        <input type="submit" value="GO" class="go">*#
+    </div>
+</form>
+#end

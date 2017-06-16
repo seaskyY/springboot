@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!--本地缓存-->
+	<bean id="localHashMapCache" class="com.tc.pes.cache.impl.LocalHashMapCache"/>
+	<!--redis -->
+	<bean id="keyGenerator" class="com.tcmc.cache.CacheKeyGeneratorV3" p:systemName="PES" />
+	<bean id="fstRedisSerializer" class="com.tcmc.cache.FstRedisSerializer" />
+
+	<!--redis 数据缓存 -->
+	<bean id="redisHashMapCache" class="com.tc.pes.cache.impl.RedisHashMapCache"
+		  p:redisTemplate-ref="pesRedisTemplate" p:keyGenerator-ref="keyGenerator" />
+
+	<!-- spring data jedis 配置 -->
+	<bean id="pesJedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxActive" value="${spring.redis.pool.maxActive}" />
+		<property name="maxIdle" value="${spring.redis.pool.maxIdle}" />
+		<property name="maxWait" value="${spring.redis.pool.maxWait}" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+
+	<!-- spring data jedis 工厂模式现实 -->
+	<bean id="pesJedisConnectionFactory"
+		  class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="${spring.redis.ip}" />
+		<property name="port" value="${spring.redis.port}" />
+		<property name="poolConfig" ref="pesJedisPoolConfig" />
+		<property name="database" value="${spring.redis.database.index}" />
+	</bean>
+
+	<bean id="pesRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+		  p:connectionFactory-ref="pesJedisConnectionFactory"
+		  p:valueSerializer-ref="fstRedisSerializer" />
+</beans>

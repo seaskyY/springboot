@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html>
+    $contain.get('/contain/htmlhead.htm')
+<body>
+<!--头部结束-->
+    #*$contain.get('/contain/navbar.htm').put('topMenuName', '物资管理')*#
+<!--中部开始-->
+    $screen_content
+<!--中部结束-->
+<!-- 下面部分是公共尾部 -->
+    $contain.get('/contain/foot.htm')
+</body>
+</html>

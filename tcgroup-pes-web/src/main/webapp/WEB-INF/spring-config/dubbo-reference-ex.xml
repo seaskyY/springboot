@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+       ">
+
+    <!-- ================引用udc-3a-hbase服务================ -->
+    <dubbo:reference id="bzStaffService" interface="com.tc.udc.aaa.api.service.IBzStaffService"
+                     version="${spring.dubbo.udc.version}" group="${spring.dubbo.udc.group}"/>
+    <dubbo:reference id="hospitalInfoService"
+                     interface="com.tc.udc.aaa.api.service.IHospitalInfoService"
+                     group="${spring.dubbo.udc.group}" version="${spring.dubbo.udc.version}"/>
+    <dubbo:reference id="officeDpiService"
+                     interface="com.tcmc.udc.pom.api.serivce.IOfficeDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+    <dubbo:reference id="staffOfficeDpiService"
+                     interface="com.tcmc.udc.pom.api.serivce.IStaffOfficeDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+    <dubbo:reference id="hospitalOfficeDpiService"
+                     interface="com.tcmc.udc.pom.api.serivce.IHospitalOfficeDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+	
+    <!-- ================引用HIS服务================ -->
+
+    <!-- ================引用POM服务================ -->
+    <dubbo:reference id="menuDpiService"
+                     interface="com.tcmc.udc.pom.api.serivce.IMenuDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+    <dubbo:reference id="dataPrivilegesDpiService"
+                     interface="com.tcmc.udc.pom.api.serivce.IDataPrivilegesDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+
+    <dubbo:reference id="privilegesDpiService"
+                     interface="com.tcmc.udc.pom.api.serivce.IPrivilegesDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+    <dubbo:reference id="loginDpiService"
+                     interface="com.tcmc.udc.pom.api.serivce.ILoginDpiService"
+                     group="${spring.dubbo.pom.group}" version="${spring.dubbo.pom.version}"/>
+</beans>

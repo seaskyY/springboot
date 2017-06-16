@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!-- urlBrokers -->
+  <bean id="appServerBroker" class="com.tc.common.url.URLBroker">
+    <property name="config">
+      <bean class="com.tc.common.url.URLConfig">
+        <property name="protocol" value="${spring.app.protocol}"></property>
+        <property name="host" value="${spring.app.web.host}"></property>
+        <property name="port" value="${spring.app.web.port}"></property>
+        <property name="path" value="${spring.app.web.path}"></property>
+      </bean>
+    </property>
+  </bean>
+
+  <!-- 资源服务器url，存放css，js等静态资源文件-->
+  <bean id="resourceServerBroker" class="com.tc.common.url.StampURLBroker">
+    <property name="config">
+      <bean class="com.tc.common.url.URLConfig">
+        <property name="protocol" value="${spring.resource.protocol}"></property>
+        <property name="host" value="${spring.resource.host}"></property>
+        <property name="port" value="${spring.resource.port}"></property>
+        <property name="path" value="${spring.resource.path}"></property>
+      </bean>
+    </property>
+    <property name="stamp" value="${spring.resource.stamp}"></property>
+  </bean>
+
+  <!-- brokerInit -->
+  <bean class="com.tc.common.url.ServletContextInitHelper">
+    <property name="brokers">
+      <list>
+        <ref bean="appServerBroker"/>
+        <ref bean="resourceServerBroker"/>
+      </list>
+    </property>
+  </bean>
+
+  <!-- interceptors -->
+  <bean id="brokersInterceptor"
+        class="com.tc.common.url.URLBrokerLauncherInterceptor">
+    <property name="brokers">
+      <map>
+        <entry key="appServer" value-ref="appServerBroker"/>
+        <entry key="resourceServer" value-ref="resourceServerBroker"/>
+      </map>
+    </property>
+  </bean>
+
+</beans>

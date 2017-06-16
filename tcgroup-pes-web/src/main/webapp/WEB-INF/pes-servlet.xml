@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <import resource="spring-config/property-config.xml"/>
+
+  <!-- 安全配置-->
+  <security:global-method-security pre-post-annotations="enabled"/>
+
+  <!--处理一些不需要后台业务逻辑，只需要vm的页面，参数通过contain.get().put（）传入， 可以省下controller的代码-->
+  <bean id="simpleControllerHandlerAdapter"
+        class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+  <bean id="urlFilenameMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="order" value="999"/>
+    <property name="defaultHandler">
+      <bean class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
+    </property>
+   <!-- <property name="interceptors">
+      <list>
+        <ref bean="brokersInterceptor"/>
+      </list>
+    </property>-->
+  </bean>
+
+  <bean id="urlCondition" class="com.tc.pes.web.resolver.ConditionUrl">
+    <property name="urlConditionKeyMap">
+      <map>
+        <entry key="/apply/doctorApply/" value="1"/>
+      </map>
+    </property>
+  </bean>
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <list>
+        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+          <property name="supportedMediaTypes">
+            <list>
+              <value>text/plain;charset=UTF-8</value>
+            </list>
+          </property>
+        </bean>
+        <!--<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+          <property name="supportedMediaTypes">
+            <list>
+              <value>text/html;charset=UTF-8</value>
+              <value>application/json;charset=UTF-8</value>
+            </list>
+          </property>
+          <property name="objectMapper">
+              <bean class="com.tc.pes.web.util.TCMCObjectMapper"></bean>
+          </property>
+        </bean>-->
+      </list>
+    </property>
+    <property name="customArgumentResolvers">
+      <list>
+        <bean class="com.tc.pes.web.resolver.MemberAgentArgumentResolver"/>
+        <bean class="com.tc.pes.web.resolver.SessionConditionResolver">
+          <property name="conditionUrl" ref="urlCondition"/>
+          <property name="classList">
+            <list>
+              <bean class="com.tc.pes.web.serialize.QueryConditionSerializeObject"/>
+            </list>
+          </property>
+        </bean>
+      </list>
+    </property>
+    <!--日期和注入攻击处理-->
+    <property name="webBindingInitializer">
+      <bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+        <property name="propertyEditorRegistrars">
+          <array>
+            <bean class="com.tc.pes.web.util.CustomPropertyEditorRegistrar"/>
+          </array>
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+    <property name="order" value="200"/>
+    <property name="interceptors">
+      <list>
+        <bean class="com.tc.pes.web.resolver.SessionConditionInterceptor">
+          <property name="conditionUrl" ref="urlCondition"/>
+        </bean>
+
+       <!-- <ref bean="brokersInterceptor"/>-->
+        <!--表单重复提交的控制-->
+        <!--<bean class="com.tc.pes.web.util.SessionTokenHandlerInterceptor"
+              p:redisTokenTemplate-ref="redisTemplate"/>-->
+
+      </list>
+    </property>
+  </bean>
+
+  <!-- 文件上传解析-->
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="defaultEncoding" value="UTF-8"/>
+
+  </bean>
+
+  <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="order" value="100"/>
+    <property name="prefix" value="/WEB-INF/views/"/>
+    <property name="suffix" value=".vm"/>
+  </bean>
+
+  <!-- view resolver -->
+  <bean id="viewResolver"
+        class="com.tc.common.velocity.resolver.FixedVelocityLayoutViewResolver">
+    <property name="order" value="10"/>
+    <property name="suffix" value=".vm"/>
+    <property name="prefix" value="screen/"/>
+    <property name="layoutUrl" value="layout/default.vm"/>
+    <property name="exposeSpringMacroHelpers" value="true"/>
+    <property name="dateToolAttribute" value="dateTool"/>
+    <property name="numberToolAttribute" value="numberTool"/>
+    <property name="toolboxConfigLocation" value="WEB-INF/vm-toolbox.xml"/>
+    <property name="contentType" value="text/html;charset=UTF-8"/>
+    <property name="templateEncoding" value="UTF-8"/>
+    <property name="exposeRequestAttributes" value="true"/>
+  </bean>
+
+  <bean id="velocityConfigurer"
+        class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+    <property name="resourceLoaderPath" value="WEB-INF/views/"/>
+    <property name="velocityProperties">
+      <map>
+        <entry key="input.encoding" value="UTF-8"/>
+        <entry key="output.encoding" value="UTF-8"/>
+      </map>
+    </property>
+    <property name="configLocation" value="classpath:/velocity.properties"/>
+  </bean>
+
+  <!-- 声明  支持velocity模板 -->
+  <bean id="velocityEngine"
+        class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    <property name="resourceLoaderPath" value="classpath:"/>
+  </bean>
+
+  <!-- exception resolver-->
+  <bean class="com.tc.pes.web.resolver.ExceptionResolver">
+    <property name="errorPage" value="error"/>
+    <property name="defaultReturnUrl" value="${spring.app.server.default}"/>
+  </bean>
+
+  <context:component-scan base-package="com.tc.pes.web.action"/>
+
+</beans>
